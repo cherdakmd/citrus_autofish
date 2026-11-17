@@ -15,7 +15,7 @@
 
 ## Установка / обновление через Horizon Launcher
 
-1. Скачай `citrus_autofish-0.3.0.hnmod` из [релиза v0.3.0 на GitHub](https://github.com/cherdakmd/citrus_autofish/releases/tag/v0.3.0). Удали предыдущий `citrus_autofish-*.hnmod` из папки `horizon-native-mods` нужного инстанса и положи туда скачанный файл. Папку можно открыть из раздела модов Launcher.
+1. Скачай `citrus_autofish-0.3.0.hmod` из раздела Download на [странице релиза v0.3.0](https://github.com/cherdakmd/citrus_autofish/releases/tag/v0.3.0). Если вложение ещё не отображается, скачай файл из [репозитория](https://github.com/cherdakmd/citrus_autofish/blob/855c61e/release-assets/citrus_autofish-0.3.0.hmod) через **Download raw file**. Удали предыдущую версию Citrus AutoFish из `horizon-native-mods` нужного инстанса и положи туда `.hmod`. Папку можно открыть из раздела модов Launcher.
 2. Включи Citrus AutoFish в списке модов.
 3. Нажми **«Собрать»**. После успешной сборки запусти тот же инстанс.
 4. В игре введи `/autofish` или `.autofish`; меню — `/autofish menu` или `.autofish menu`.
