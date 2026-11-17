@@ -1,6 +1,6 @@
-## Citrus AutoFish v0.1.5 — experimental source prerelease
+## Citrus AutoFish v0.1.5 — experimental source prerelease (superseded)
 
-Supersedes v0.1.4, which Launcher 0.2.69 rejected because a native bundle may only use local path dependencies declared in its own `[[crate]]` entries.
+**Superseded by v0.1.6.** The user's Launcher 0.2.69 build reached Rust compilation and reported two trait-API mismatches: `tick` needs a `TickEvent`, and `CommandEvent` has no `ran` field. Use v0.1.6 instead.
 
 ### Changes
 - Keep the Horizon pin at `9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0`, matching Launcher 0.2.69.

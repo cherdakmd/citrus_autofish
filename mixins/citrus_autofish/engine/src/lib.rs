@@ -1,4 +1,6 @@
-use horizon_client::mod_api::{CommandEvent, Flow, Hooks, Host, PlayerFishEvent, ServerboundPlayPacket};
+use horizon_client::mod_api::{
+    CommandEvent, Flow, Hooks, Host, PlayerFishEvent, ServerboundPlayPacket, TickEvent,
+};
 use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering};
 
 const RECAST_DELAY_TICKS: u8 = 4;
@@ -67,7 +69,7 @@ impl Hooks for AutoFish {
 
         let enabled = !self.enabled.load(Ordering::Acquire);
         self.set_enabled(enabled);
-        event.ran = true;
+        // The generated command hook writes its `ran` output when we cancel.
         Flow::Cancel
     }
 
@@ -96,7 +98,7 @@ impl Hooks for AutoFish {
 
     /// Tick hook runs on both client and server Game objects; send only from
     /// the player's active client window.
-    fn tick(&self, host: &mut dyn Host) {
+    fn tick(&self, host: &mut dyn Host, _event: &mut TickEvent) {
         if !host.window() || !host.playing() || !self.enabled.load(Ordering::Acquire) {
             return;
         }
