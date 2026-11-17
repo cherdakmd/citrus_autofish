@@ -1,6 +1,6 @@
-## Citrus AutoFish v0.1.3 — experimental source prerelease
+## Citrus AutoFish v0.1.3 — experimental source prerelease (superseded)
 
-Supersedes v0.1.2, whose launcher build stopped in Cargo offline mode while trying to fetch `horizon-protocol` as a second Git dependency.
+**Superseded by v0.1.4.** The version-only `horizon-protocol = "0.1.0"` dependency in v0.1.3 still resolves through crates.io, where Launcher 0.2.69's offline Cargo index has no such package. Use v0.1.4 instead.
 
 ### Changes
 - Keep Horizon pinned to `9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0`, matching the revision Launcher 0.2.69 first checks and containing the staged workspace's `crates/horizon-mods` crate.
