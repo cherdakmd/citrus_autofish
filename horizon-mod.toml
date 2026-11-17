@@ -1,0 +1,13 @@
+id = "citrus_autofish"
+name = "Citrus AutoFish"
+version = "0.1.0"
+description = "Автоматически вытаскивает улов и забрасывает удочку снова."
+authors = ["Citrus AutoFish"]
+api = "0.2"
+side = "both"
+capabilities = []
+
+[native]
+game = "26.3"
+horizon = "c07bfa76e71e8db9e84a7e61832a8fb898718e81"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
