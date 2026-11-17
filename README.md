@@ -2,7 +2,7 @@
 
 Авто-рыбалка для **Horizon** — реализации Minecraft: Java Edition 26.3, переписанной на Rust. Это native-мод Horizon, а не Fabric/Forge-мод, не Bedrock-addon и не игра Rust.
 
-> **v0.1.2 — экспериментальный исходный релиз. Сборка и игровой тест не подтверждены.** Он предназначен для Horizon Launcher 0.2.69 / Horizon revision `9f42064`. Не считайте этот релиз рабочим, пока native-build не завершится без ошибок и не будет проверен в игре.
+> **v0.1.3 — экспериментальный исходный релиз. Сборка и игровой тест не подтверждены.** Он предназначен для Horizon Launcher 0.2.69 / Horizon revision `9f42064`. Не считайте этот релиз рабочим, пока native-build не завершится без ошибок и не будет проверен в игре.
 
 ## Как работает
 
@@ -16,7 +16,7 @@
 
 ## Установка через Horizon Launcher 0.2.69 (Windows)
 
-1. Скачайте и распакуйте исходный ZIP релиза `v0.1.2`.
+1. Скачайте и распакуйте исходный ZIP релиза `v0.1.3`.
 2. В PowerShell перейдите в распакованную папку проекта — ту, где находится этот `README.md`.
 3. Запустите native build, передав лаунчеру **папку мода**, а не корень репозитория:
 
@@ -40,6 +40,7 @@ horizon-launcher native-build ./mixins/citrus_autofish --trust-native-code
 - Minecraft: Java Edition 26.3.
 - Horizon Launcher 0.2.69.
 - Исходная ревизия Horizon закреплена на `9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0`.
+- `horizon-protocol` подключён версией `0.1.0` из Cargo.lock, без отдельного Git checkout; так требует offline-сборка Launcher.
 - `95c79d7` намеренно не используется: в ней отсутствует `crates/horizon-mods/Cargo.toml`, требуемый staging workspace Launcher 0.2.69. Этот несовместимый pin вызвал ошибку предыдущего релиза.
 
 ## Безопасность

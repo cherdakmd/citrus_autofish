@@ -1,6 +1,6 @@
 ## Citrus AutoFish v0.1.2 — experimental source prerelease
 
-This is a diagnostic fix for the Horizon Launcher 0.2.69 source revision mismatch reported while building v0.1.1.
+**Superseded by v0.1.3.** This diagnostic fix changed the Horizon pin, but its second Git dependency could not be fetched by Launcher 0.2.69 in offline mode. Use v0.1.3 instead.
 
 ### Changes
 - Pin Horizon to the installed revision `9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0` instead of `95c79d7`. The latter source tree lacks `crates/horizon-mods/Cargo.toml`, which Launcher 0.2.69's staged workspace requires.
