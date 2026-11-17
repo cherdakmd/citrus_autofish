@@ -13,8 +13,8 @@ Prepared for manual submission at https://playhorizon.dev/mods/submit. The form 
 - **Category suggestion:** Utility / Farming (choose the closest category available in the submission form)
 - **Source:** https://github.com/cherdakmd/citrus_autofish
 - **Release page:** https://github.com/cherdakmd/citrus_autofish/releases/tag/v0.3.0
-- **Download:** [citrus_autofish-0.3.0.hmod](https://github.com/cherdakmd/citrus_autofish/blob/855c61e/release-assets/citrus_autofish-0.3.0.hmod) (use GitHub's **Download raw file** action)
-- **SHA-256:** `00e90ab5f2601f8e00e0980e195ea605c814150ce0713026c9b8b80e3829333b`
+- **Download:** [citrus_autofish-0.3.0.hnmod](https://github.com/cherdakmd/citrus_autofish/blob/93f8268/release-assets/citrus_autofish-0.3.0.hnmod) (use GitHub's **Download raw file** action; native source mods use `.hnmod`)
+- **SHA-256:** `7762bb4c393841f033221fef2a38dde97f64e4a4e27cd743c2fef303347b9c50`
 
 ## Short description
 
@@ -28,7 +28,7 @@ Citrus AutoFish automates fishing in Minecraft Java Edition using Horizon. Toggl
 
 ## Submission checklist
 
-- Upload `release-assets/citrus_autofish-0.3.0.hmod` from this workspace. It is a combined native `.hmod` package; do not rename the `.hnmod` instead.
+- For the native-mod submission type, upload `release-assets/citrus_autofish-0.3.0.hnmod` from this workspace; do not submit the combined `.hmod` unless the form explicitly asks for that package kind.
 - Keep the experimental status and packet-sequence warning visible in the listing.
 - The bundle contains native Rust source and manifests; it is not a precompiled game binary. The user must allow native code and build it with Horizon Launcher.
 - Confirm the listing form's category, upload rules, and supported-version fields before submitting. This draft was prepared without accessing or submitting the PlayHorizon form.
