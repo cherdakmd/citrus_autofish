@@ -1,4 +1,4 @@
-use mod_api::{
+use horizon_client::mod_api::{
     self, ClientHost, ClientTickPostEvent, CommandEvent, Flow, Hooks, PlayerFishEvent, ServerHost,
     Text,
 };
@@ -24,7 +24,6 @@ impl AutoFish {
     }
 }
 
-#[mod_api::horizon_mod]
 impl Hooks for AutoFish {
     /// `/autofish` is handled locally and never sent as a server command.
     fn command(&self, host: &mut dyn ClientHost, event: &mut CommandEvent<'_>) -> Flow {
@@ -64,7 +63,7 @@ impl Hooks for AutoFish {
         Flow::Continue
     }
 
-    /// Use Horizon's normal input queue; its usual item, target, and server checks still apply.
+    /// Use Horizon's normal input queue; regular item, target, and server checks still apply.
     fn client_tick_post(&self, host: &mut dyn ClientHost, _event: &mut ClientTickPostEvent) {
         if !host.playing() || !self.enabled.load(Ordering::Acquire) {
             return;
@@ -94,6 +93,11 @@ impl Hooks for AutoFish {
             }
         }
     }
+}
+
+/// Entry point used by Horizon's typed native-mod loader.
+pub fn hooks() -> Box<dyn Hooks> {
+    Box::new(AutoFish::default())
 }
 
 #[cfg(test)]

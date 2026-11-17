@@ -1,0 +1,8 @@
+[package]
+name = "citrus_autofish"
+version = "0.1.1"
+edition = "2024"
+publish = false
+
+[dependencies]
+horizon-client = { git = "https://github.com/horizon-rust/horizon", rev = "95c79d726f51f7cbff8edce95e61812002766cfa" }

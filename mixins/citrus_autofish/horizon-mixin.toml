@@ -1,0 +1,10 @@
+[mod]
+id = "citrus_autofish"
+version = "0.1.1"
+priority = 100
+
+[compatibility]
+horizon_revision = "95c79d726f51f7cbff8edce95e61812002766cfa"
+
+[api]
+path = "engine"
