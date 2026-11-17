@@ -1,5 +1,7 @@
 ## Citrus AutoFish v0.1.0 — экспериментальный исходный релиз
 
+> **Не используйте этот архив с Horizon Launcher 0.2.69:** в нём новый формат проекта, который эта версия CLI не распознаёт. Скачайте [v0.1.1](https://github.com/cherdakmd/citrus_autofish/releases/tag/v0.1.1), собранный с `horizon-mixin.toml` для CLI 0.2.69.
+
 Нативный мод авто-рыбалки для Horizon — Minecraft: Java Edition 26.3, переписанного на Rust. Это не Fabric/Forge-мод и не Bedrock-addon.
 
 ### Возможности
