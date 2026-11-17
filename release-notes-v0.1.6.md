@@ -8,7 +8,7 @@ The prior dependency workaround remains: `UseItem` is constructed through the pi
 
 ### Compatibility and limitations
 - Horizon revision `9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0`; Launcher 0.2.69.
-- **This fix has not been compiled in this environment.** Please treat v0.1.6 as an experimental source prerelease until the launcher build succeeds.
+- **Native-build was confirmed by the user** on Windows PowerShell 5.1 / Horizon Launcher 0.2.69: `native-9f42064-5ca42cdb9fae` built and was selected for the instance in 2 min 27 s (Performance). The mod has not yet been tested in-game; functionality remains unconfirmed.
 - Direct `UseItem` packets are not identical to vanilla input. The mod's independent sequence counter is not synchronized with the client's own actions; overlapping item/block interactions may conflict with sequence acknowledgements. Test only in a disposable world and disable the mod if anything looks wrong.
 - `/autofish` toggles silently. The server-side fishing hook may not be available on remote vanilla servers.
 
