@@ -1,17 +1,20 @@
 use horizon_client::mod_api::{
-    self, ClientHost, ClientTickPostEvent, CommandEvent, Flow, Hooks, PlayerFishEvent, ServerHost,
-    Text,
+    self, CommandEvent, Flow, Hooks, Host, PlayerFishEvent, ServerboundPlayPacket,
 };
-use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
+use horizon_protocol::packets::play::UseItem;
+use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering};
 
 const RECAST_DELAY_TICKS: u8 = 4;
 
-/// State shared by the local server's fishing hooks and the client's input queue.
+/// State shared by the local server's fishing hooks and the client's tick hook.
 #[derive(Default)]
 struct AutoFish {
     enabled: AtomicBool,
     reel_pending: AtomicBool,
     recast_ticks: AtomicU8,
+    /// Out-of-band sequence numbers for the direct `UseItem` packet path.
+    /// Horizon 0.2.69 does not expose its vanilla mapping-click queue.
+    packet_sequence: AtomicU32,
 }
 
 impl AutoFish {
@@ -22,26 +25,42 @@ impl AutoFish {
             self.recast_ticks.store(0, Ordering::Release);
         }
     }
+
+    fn next_packet_sequence(&self) -> i32 {
+        // Keep values non-negative (required by the server) while allowing the
+        // counter to wrap without overflowing a signed integer.
+        (self.packet_sequence.fetch_add(1, Ordering::AcqRel) % i32::MAX as u32 + 1) as i32
+    }
+
+    fn use_rod(&self, host: &mut dyn Host) {
+        let Some(player) = host.player() else {
+            return;
+        };
+        let packet = ServerboundPlayPacket::UseItem(UseItem {
+            hand: 0, // main hand
+            sequence: self.next_packet_sequence(),
+            yaw: player.yaw,
+            pitch: player.pitch,
+        });
+        let _ = host.send_packet(packet);
+    }
 }
 
 impl Hooks for AutoFish {
     /// `/autofish` is handled locally and never sent as a server command.
-    fn command(&self, host: &mut dyn ClientHost, event: &mut CommandEvent<'_>) -> Flow {
+    fn command(&self, _host: &mut dyn Host, event: &mut CommandEvent<'_>) -> Flow {
         if event.command.trim() != "autofish" {
             return Flow::Continue;
         }
 
         let enabled = !self.enabled.load(Ordering::Acquire);
         self.set_enabled(enabled);
-        let status = if enabled { "включена" } else { "выключена" };
-        let message = Text::literal(format!("Citrus AutoFish: авто-рыбалка {status}"));
-        let _ = host.chat_line(message);
         event.ran = true;
         Flow::Cancel
     }
 
-    /// A server-side bite schedules one ordinary use-item click on the client.
-    fn player_fish(&self, _host: &mut dyn ServerHost, event: &mut PlayerFishEvent<'_>) -> Flow {
+    /// A server-side bite schedules one use-item packet on the client.
+    fn player_fish(&self, _host: &mut dyn Host, event: &mut PlayerFishEvent<'_>) -> Flow {
         if !self.enabled.load(Ordering::Acquire) {
             return Flow::Continue;
         }
@@ -63,14 +82,15 @@ impl Hooks for AutoFish {
         Flow::Continue
     }
 
-    /// Use Horizon's normal input queue; regular item, target, and server checks still apply.
-    fn client_tick_post(&self, host: &mut dyn ClientHost, _event: &mut ClientTickPostEvent) {
-        if !host.playing() || !self.enabled.load(Ordering::Acquire) {
+    /// Tick hook runs on both client and server Game objects; send only from
+    /// the player's active client window.
+    fn tick(&self, host: &mut dyn Host) {
+        if !host.window() || !host.playing() || !self.enabled.load(Ordering::Acquire) {
             return;
         }
 
         if self.reel_pending.swap(false, Ordering::AcqRel) {
-            let _ = host.click_mapping("key.use");
+            self.use_rod(host);
             return;
         }
 
@@ -85,7 +105,7 @@ impl Hooks for AutoFish {
             ) {
                 Ok(_) => {
                     if next == 0 && self.enabled.load(Ordering::Acquire) {
-                        let _ = host.click_mapping("key.use");
+                        self.use_rod(host);
                     }
                     return;
                 }
@@ -95,7 +115,7 @@ impl Hooks for AutoFish {
     }
 }
 
-/// Entry point used by Horizon's typed native-mod loader.
+/// Entry point used by Horizon's native-mod loader.
 pub fn hooks() -> Box<dyn Hooks> {
     Box::new(AutoFish::default())
 }
@@ -124,5 +144,12 @@ mod tests {
         fish.reel_pending.store(true, Ordering::Release);
         assert!(fish.reel_pending.swap(false, Ordering::AcqRel));
         assert!(!fish.reel_pending.swap(false, Ordering::AcqRel));
+    }
+
+    #[test]
+    fn packet_sequence_stays_non_negative_and_starts_at_one() {
+        let fish = AutoFish::default();
+        assert_eq!(fish.next_packet_sequence(), 1);
+        assert_eq!(fish.next_packet_sequence(), 2);
     }
 }
