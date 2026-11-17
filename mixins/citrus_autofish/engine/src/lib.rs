@@ -1,10 +1,17 @@
-use horizon_client::mod_api::{
-    self, CommandEvent, Flow, Hooks, Host, PlayerFishEvent, ServerboundPlayPacket,
-};
-use horizon_protocol::packets::play::UseItem;
+use horizon_client::mod_api::{CommandEvent, Flow, Hooks, Host, PlayerFishEvent, ServerboundPlayPacket};
 use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering};
 
 const RECAST_DELAY_TICKS: u8 = 4;
+/// Serverbound packet id in the pinned Horizon revision 9f42064.
+const USE_ITEM_PACKET_ID: i32 = 67;
+
+fn append_varint(mut value: u32, bytes: &mut Vec<u8>) {
+    while value & !0x7f != 0 {
+        bytes.push((value as u8 & 0x7f) | 0x80);
+        value >>= 7;
+    }
+    bytes.push(value as u8);
+}
 
 /// State shared by the local server's fishing hooks and the client's tick hook.
 #[derive(Default)]
@@ -36,12 +43,17 @@ impl AutoFish {
         let Some(player) = host.player() else {
             return;
         };
-        let packet = ServerboundPlayPacket::UseItem(UseItem {
-            hand: 0, // main hand
-            sequence: self.next_packet_sequence(),
-            yaw: player.yaw,
-            pitch: player.pitch,
-        });
+        // This revision re-exports the packet enum but not its `UseItem` payload type.
+        // Decode the wire payload through the public enum API to retain Horizon's exact
+        // packet type without adding a forbidden direct dependency on horizon-protocol.
+        let mut payload = Vec::with_capacity(11);
+        append_varint(0, &mut payload); // main hand
+        append_varint(self.next_packet_sequence() as u32, &mut payload);
+        payload.extend_from_slice(&player.yaw.to_be_bytes());
+        payload.extend_from_slice(&player.pitch.to_be_bytes());
+        let Ok(packet) = ServerboundPlayPacket::decode(USE_ITEM_PACKET_ID, &payload) else {
+            return;
+        };
         let _ = host.send_packet(packet);
     }
 }
@@ -151,5 +163,14 @@ mod tests {
         let fish = AutoFish::default();
         assert_eq!(fish.next_packet_sequence(), 1);
         assert_eq!(fish.next_packet_sequence(), 2);
+    }
+
+    #[test]
+    fn varint_packet_fields_use_minecraft_wire_encoding() {
+        let mut bytes = Vec::new();
+        append_varint(0, &mut bytes);
+        append_varint(127, &mut bytes);
+        append_varint(128, &mut bytes);
+        assert_eq!(bytes, [0x00, 0x7f, 0x80, 0x01]);
     }
 }

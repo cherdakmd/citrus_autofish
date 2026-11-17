@@ -1,6 +1,6 @@
 ## Citrus AutoFish v0.1.2 — experimental source prerelease
 
-**Superseded by v0.1.4.** v0.1.2 fixed the Horizon revision pin, but its extra Git dependency could not be fetched in offline mode; v0.1.3 then tried an unavailable crates.io package. Use v0.1.4 instead.
+**Superseded by v0.1.4.** v0.1.2 fixed the Horizon revision pin, but its extra Git dependency could not be fetched in offline mode; v0.1.3 then tried an unavailable crates.io package. v0.1.3 and v0.1.4 also failed in the offline native-build workflow; use v0.1.5 instead.
 
 ### Changes
 - Pin Horizon to the installed revision `9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0` instead of `95c79d7`. The latter source tree lacks `crates/horizon-mods/Cargo.toml`, which Launcher 0.2.69's staged workspace requires.
